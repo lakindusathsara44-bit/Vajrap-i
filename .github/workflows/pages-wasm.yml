@@ -1,7 +1,9 @@
-name: Build and deploy Vajrapani with WebAssembly
+name: Build and deploy Vajrapani (C++ and .NET WebAssembly)
 
 on:
   push:
+    branches: [main]
+  pull_request:
     branches: [main]
   workflow_dispatch:
 
@@ -20,23 +22,43 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
+
       - name: Install Emscripten
         uses: mymindstorm/setup-emsdk@v14
         with:
           version: latest
           actions-cache-folder: emsdk-cache
-      - name: Build WebAssembly
+
+      - name: Build C++ WebAssembly
         run: |
           emcmake cmake -S cpp -B build
           cmake --build build --parallel
+
+      - name: Install .NET 10 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Publish Blazor WebAssembly app
+        run: dotnet publish dotnet/Vajrapani.Blazor.csproj --configuration Release --output dotnet-publish
+
+      - name: Assemble static Pages site
+        run: |
+          mkdir -p site
+          rsync -a --exclude='.git/' --exclude='build/' --exclude='dotnet-publish/' --exclude='site/' ./ site/
+          mkdir -p site/dotnet-demo
+          cp -a dotnet-publish/. site/dotnet-demo/
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: site
 
   deploy:
+    if: github.event_name != 'pull_request'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

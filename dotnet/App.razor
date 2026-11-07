@@ -1,0 +1,13 @@
+<Router AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+    </Found>
+    <NotFound>
+        <PageTitle>Not found | Vajrapani</PageTitle>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <h1>Page not found</h1>
+            <p>The requested page does not exist in this demo.</p>
+            <a href="./">Return to the .NET demo</a>
+        </LayoutView>
+    </NotFound>
+</Router>
