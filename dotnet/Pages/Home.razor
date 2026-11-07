@@ -1,0 +1,38 @@
+@page "/"
+<PageTitle>Vajrapani .NET WebAssembly</PageTitle>
+
+<section class="hero">
+    <p class="eyebrow">C# · .NET 10 · WEBASSEMBLY</p>
+    <h1>Vajrapani <span>.NET Demo</span></h1>
+    <p class="intro">A small C# application running in your browser with Blazor WebAssembly. This is a practical starting point for adding interactive .NET features to the existing static website.</p>
+</section>
+
+<section class="panel">
+    <h2>Live C# counter</h2>
+    <p class="muted">The counter state and logic below are handled by C# code in this browser session.</p>
+    <div class="counter">
+        <button class="counter-button" @onclick="Decrement" aria-label="Decrease counter">−</button>
+        <strong>@count</strong>
+        <button class="counter-button" @onclick="Increment" aria-label="Increase counter">+</button>
+    </div>
+    <button class="reset" @onclick="Reset">Reset counter</button>
+    <p class="status" role="status">@(count == 0 ? "Ready for your next action." : $"You have changed the counter {Math.Abs(count)} time(s) from zero.")</p>
+</section>
+
+<section class="panel info">
+    <h2>What this proves</h2>
+    <ul>
+        <li>C# components can run in a modern browser without a separate ASP.NET server.</li>
+        <li>The app can be published as static files to GitHub Pages.</li>
+        <li>It can coexist with the site's existing HTML, CSS, JavaScript and C++ WebAssembly demo.</li>
+    </ul>
+    <p><strong>Note:</strong> This demo is client-side only. Database access, secret API keys, authentication authority and server-side business logic still require a secure backend.</p>
+</section>
+
+@code {
+    private int count;
+
+    private void Increment() => count++;
+    private void Decrement() => count--;
+    private void Reset() => count = 0;
+}
